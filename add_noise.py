@@ -1,4 +1,8 @@
-# python util to add Gaussian noise to a pulse profile in .ar format
+# Conor Sheridan
+# 14/11/2025
+#
+# Python util to add Gaussian noise to a pulse profile (in .ar format)
+
 import numpy as np
 import psrchive
 import argparse
@@ -22,7 +26,7 @@ def read_profile_from_file(filename):
     ar_file.fscrunch()
     ar_file.pscrunch()
     
-    pdata = ar_file.get_Profile(0,0,0).get_amps()
+    pdata = ar_file.get_Profile(0,0,0).get_amps() # returns the pointer to the array containing the amplitudes of the phase values of the profile
     return ar_file, pdata
 
 # write data to an ar file
@@ -34,16 +38,16 @@ def write_profile_to_file(ar_file,filename,output):
         # while loop to take input from user on whether to overwrite or not
         while(ans == 0):
             ans = input()
-            if(ans == 'y' or ans =='Y'):
+            if(ans == 'y' or ans == 'Y'):
                 continue
-            elif(ans =='n' or ans =='N'):
-                print("Cancelling operation...")
+            elif(ans == 'n' or ans == 'N'):
+                print("Cancelling operation...") 
                 sys.exit()
             else:
-                print("Unkown input, please enter 'y' or 'n':")
-                ans = 0
+                print("Unkown input, please enter 'y' or 'n':") 
+                ans = 0 # loops until program recieves valid input
         
-    ar_file.unload(output)
+    ar_file.unload(output) # saves the currently loaded archive file
 
 # input a pointer to the profile data and a scale generate gaussian noise, scale it and add it to the pulse profile
 def add_gaussian_noise(pdata,scale):
