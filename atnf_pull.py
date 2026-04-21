@@ -13,7 +13,10 @@ class psrcat:
         if cache[-1] != "/":
             cache += "/"
         self.cache = cache + f"psrcat{version}/"
-        os.mkdir(self.cache)
+
+        # ensure path exists
+        if os.path.exists(self.cache) == False:
+            os.mkdir(self.cache)
 
     # get ephemeris either from ATNF or cache
     def get(self, psr, force_rewrite = False):
