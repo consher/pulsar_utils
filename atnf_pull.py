@@ -2,8 +2,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import os
-
-psrs = ['J0030+0451','J0218+4232','J0437−4715','J0613−0200','J0621+1002','J0711−6830','J0751+1807','J0900−3144','J1012+5307','J1022+1001','J1024−0719','J1045−4509','J1455−3330','J1600−3053','J1603−7202','J1640+2224','J1643−1224','J1713+0747','J1730−2304','J1732−5049']
+import sys
 
 class psrcat:
     def __init__(self, cache, version="2.7.0"):
@@ -62,3 +61,25 @@ class psrcat:
         
         else:
             raise(f"Ephemeris at {dir}{psr} does not exist, use psrcat.get() instead!")
+
+def main():
+    npsr = len(sys.argv) - 2
+    if len(sys.argv) <= 0:
+        print("Usage: python script.py <cache> <psr1> <psr2> ... <psrn>")
+        sys.exit(1)
+
+    cache = sys.argv[1]
+    psrcat0 = psrcat(cache) # initialise pulsar catalog
+
+    for i in range(npsr):
+        print(f"Getting ephemeris for {i}...")
+        psr = append(sys.argv[i+2])
+        ephem = psrcat0.get(psr)
+        psrcat0.write(ephem,".")
+    print("done\n")
+
+if __name__ == "__main__":
+    main()
+        
+        
+    
