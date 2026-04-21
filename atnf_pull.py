@@ -1,3 +1,6 @@
+# script to pull pulsar ephemerides from the ATNF pulsar catalog
+# Conor Sheridan 21/04/2026
+
 import requests
 import json
 from bs4 import BeautifulSoup
