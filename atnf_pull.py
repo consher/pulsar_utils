@@ -7,7 +7,10 @@ import sys
 class psrcat:
     def __init__(self, cache, version="2.7.0"):
         self.version = version
-        self.cache = cache + f"{version}/"
+        if cache[-1] != "/":
+            cache += "/"
+        self.cache = cache + f"psrcat{version}/"
+        os.mkdir(self.cache)
 
     # get ephemeris either from ATNF or cache
     def get(self, psr, force_rewrite = False):
@@ -72,8 +75,8 @@ def main():
     psrcat0 = psrcat(cache) # initialise pulsar catalog
 
     for i in range(npsr):
-        print(f"Getting ephemeris for {i}...")
-        psr = append(sys.argv[i+2])
+        psr = sys.argv[i+2]
+        print(f"Getting ephemeris for {psr}...")
         ephem = psrcat0.get(psr)
         psrcat0.write(ephem,".")
     print("done\n")
