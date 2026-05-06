@@ -10,13 +10,18 @@ import sys
 class psrcat:
     def __init__(self, cache, version="2.7.0"):
         self.version = version
-        if cache[-1] != "/":
-            cache += "/"
-        self.cache = cache + f"psrcat{version}/"
 
-        # ensure path exists
-        if os.path.exists(self.cache) == False:
-            os.mkdir(self.cache)
+        if os.path.exists(cache) == False:
+            print(f"Warniing cache does not exist at {cache}")
+            sys.exit()
+        else:
+            if cache[-1] != "/":
+                cache += "/"
+            self.cache = cache + f"psrcat{version}/"
+
+            # ensure version specific cache exists, otherwise create it
+            if os.path.exists(self.cache) == False:
+                os.mkdir(self.cache)
 
     # get ephemeris either from ATNF or cache
     def get(self, psr, force_rewrite = False):
@@ -33,7 +38,10 @@ class psrcat:
                 url = f"https://www.atnf.csiro.au/research/pulsar/psrcat/proc_form.php?version={self.version}&startUserDefined=true&sort_attr=jname&sort_order=asc&condition=&coords_unit=raj%2Fdecj&radius=&coords_1=&coords_2=&pulsar_names={psr[0]}%2B{psr[1]}&ephemeris=long&ephemeris_submit=&style=long+with+errors&no_value=*&fsize=3&x_axis=&x_scale=linear&y_axis=&y_scale=linear&state=query"
 
             else:
-                psr = psr.split("\u2212")
+                if "\u2212" in psr:
+                    psr = psr.split("\u2212")
+                elif "-" in psr:
+                    psr = psr.split("-")
                 url = f"https://www.atnf.csiro.au/research/pulsar/psrcat/proc_form.php?version={self.version}&startUserDefined=true&sort_attr=jname&sort_order=asc&condition=&coords_unit=raj%2Fdecj&radius=&coords_1=&coords_2=&pulsar_names={psr[0]}%2D{psr[1]}&ephemeris=long&ephemeris_submit=&style=long+with+errors&no_value=*&fsize=3&x_axis=&x_scale=linear&y_axis=&y_scale=linear&state=query"
 
             res = requests.get(url)
